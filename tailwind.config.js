@@ -1,15 +1,21 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    "./src/components/**/*.{js,vue,ts}",
-    "./src/layouts/**/*.vue",
-    "./src/pages/**/*.vue",
-    "./src/plugins/**/*.{js,ts}",
-    "./src/app.vue",
-    "./src/error.vue",
+    "./src/{App,app,Error,error}.vue",
+    "./src/{components,layouts,pages,composables,plugins}/**/*.{js,jsx,ts,tsx,vue}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        "custom-black": {
+          DEFAULT: "#272944",
+          100: "#373852",
+        },
+        "custom-blue": {
+          DEFAULT: "#424bd1",
+        },
+      },
+    },
   },
   plugins: [],
 };

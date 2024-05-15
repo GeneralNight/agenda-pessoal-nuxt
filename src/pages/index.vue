@@ -1,5 +1,7 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+onBeforeMount(() => {
+  useRouter().push("/login");
+});
+</script>
 
-<template>
-  <div>Hello world</div>
-</template>
+<template></template>
