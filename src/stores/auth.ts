@@ -7,6 +7,7 @@ interface IState {
   errorLogin: boolean;
   keepConnected: boolean;
   roles: RoleTypes[];
+  username: string;
 }
 
 export const useAuthStore = defineStore("AUTH_STORE", {
@@ -15,6 +16,7 @@ export const useAuthStore = defineStore("AUTH_STORE", {
     logging: false,
     errorLogin: false,
     keepConnected: false,
+    username: "",
   }),
   getters: {},
   actions: {
@@ -34,6 +36,7 @@ export const useAuthStore = defineStore("AUTH_STORE", {
           localStorage.removeItem("username");
           localStorage.removeItem("password");
         }
+        this.username = body.username;
         localStorage.setItem("keepConnected", `${this.keepConnected}`);
         useRouter().push("/dashboard");
       } catch (error) {
