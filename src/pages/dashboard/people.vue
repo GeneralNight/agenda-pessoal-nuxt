@@ -5,5 +5,5 @@ definePageMeta({
 </script>
 
 <template>
-  <div class="flex flex-col">Dashboard</div>
+  <div class="flex flex-col">People</div>
 </template>
