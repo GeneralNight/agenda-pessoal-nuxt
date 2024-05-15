@@ -1,6 +1,6 @@
 import { acceptHMRUpdate, defineStore } from "pinia";
 import api from "~/composables/api";
-import type { LoginBody, RoleTypes } from "~~/models";
+import type { LoginBody, Profile, RoleTypes } from "~~/models";
 
 interface IState {
   logging: boolean;
@@ -8,6 +8,10 @@ interface IState {
   keepConnected: boolean;
   roles: RoleTypes[];
   username: string;
+  id?: number;
+  loadingProfile: boolean;
+  errorLoadProfile: boolean;
+  profile?: Profile;
 }
 
 export const useAuthStore = defineStore("AUTH_STORE", {
@@ -17,6 +21,9 @@ export const useAuthStore = defineStore("AUTH_STORE", {
     errorLogin: false,
     keepConnected: false,
     username: "",
+    loadingProfile: false,
+    errorLoadProfile: false,
+    profile: undefined,
   }),
   getters: {},
   actions: {
@@ -37,6 +44,7 @@ export const useAuthStore = defineStore("AUTH_STORE", {
           localStorage.removeItem("password");
         }
         this.username = body.username;
+        this.id = res.id;
         localStorage.setItem("keepConnected", `${this.keepConnected}`);
         useRouter().push("/dashboard");
       } catch (error) {
@@ -51,6 +59,23 @@ export const useAuthStore = defineStore("AUTH_STORE", {
       localStorage.removeItem("username");
       localStorage.removeItem("password");
       useRouter().push("/login");
+    },
+    async loadProfile() {
+      this.errorLoadProfile = false;
+      this.loadingProfile = true;
+      try {
+        if (!this.id) {
+          this.logout();
+          return;
+        }
+        const res = await api.getUserProfile(this.id);
+        this.profile = res.object.usuario;
+      } catch (error) {
+        this.errorLoadProfile = true;
+        console.log(error);
+      } finally {
+        this.loadingProfile = false;
+      }
     },
   },
 });
