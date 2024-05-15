@@ -3,7 +3,7 @@
 <template>
   <div class="flex w-full h-full">
     <Sidebar />
-    <div class="p-10">
+    <div class="p-10 w-full">
       <slot />
     </div>
   </div>
