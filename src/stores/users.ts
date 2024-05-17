@@ -1,9 +1,11 @@
 import { acceptHMRUpdate, defineStore } from "pinia";
-import type { Profile } from "~~/models";
+import type { Profile, RoleTypes } from "~~/models";
 
 interface IState {
   loadingUsers: boolean;
   errorLoadUsers: boolean;
+  creatingUsers: boolean;
+  errorCreateUsers: boolean;
   users: Profile[];
 }
 
@@ -11,6 +13,8 @@ export const useUserStore = defineStore("USERS_STORE", {
   state: (): IState => ({
     loadingUsers: false,
     errorLoadUsers: false,
+    creatingUsers: false,
+    errorCreateUsers: false,
     users: [],
   }),
   getters: {},
@@ -25,6 +29,21 @@ export const useUserStore = defineStore("USERS_STORE", {
         console.log(error);
       } finally {
         this.loadingUsers = false;
+      }
+    },
+    async createUser(body: {
+      tipos: RoleTypes[];
+      usuario: Omit<Profile, "id">;
+    }) {
+      this.errorCreateUsers = false;
+      this.creatingUsers = true;
+      try {
+        this.users = await api.createUser({ body });
+      } catch (error) {
+        this.errorCreateUsers = true;
+        console.log(error);
+      } finally {
+        this.creatingUsers = false;
       }
     },
   },

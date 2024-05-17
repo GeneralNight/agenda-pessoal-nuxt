@@ -46,4 +46,10 @@ export default {
       ...options,
     });
   },
+  createUser(options?: FetchOptions): Promise<Profile[]> {
+    return this.booktoneFetch(`usuario/salvar`, {
+      method: "POST",
+      ...options,
+    });
+  },
 };
