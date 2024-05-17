@@ -17,7 +17,7 @@ const newUser = ref({
   telefone: "",
   username: "",
   nome: "",
-  tipo: RoleTypes.USER,
+  tipo: "",
 });
 
 const close = () => {
@@ -28,7 +28,7 @@ const close = () => {
 const createUser = async () => {
   if (!validate()) return;
   try {
-    await userStore.createUser({
+    const res = await userStore.createUser({
       tipos: [newUser.value.tipo],
       usuario: {
         cpf: newUser.value.cpf,
@@ -40,17 +40,19 @@ const createUser = async () => {
         username: newUser.value.username,
       },
     });
-    emits("refresh");
+    if (res === "success") {
+      emits("refresh");
+    }
   } catch (e) {
     console.log(e);
   }
 };
 
 const validate = () => {
-  if (newUser.value.password.length < 8) {
+  if (newUser.value.password.length < 7) {
     return false;
   }
-  if (newUser.value.password === newUser.value.confirmPassword) {
+  if (newUser.value.password !== newUser.value.confirmPassword) {
     return false;
   }
   return true;
@@ -156,7 +158,7 @@ const validate = () => {
             Senha
           </label>
           <input
-            type="text"
+            type="password"
             class="defaultInput w-full"
             v-model="newUser.password"
             required
@@ -171,7 +173,7 @@ const validate = () => {
             Confirme a senha
           </label>
           <input
-            type="text"
+            type="password"
             class="defaultInput w-full"
             v-model="newUser.confirmPassword"
             required
@@ -192,6 +194,24 @@ const validate = () => {
             required
             :id="`newUser.dataNascimento`"
           />
+        </div>
+        <div class="col-span flex flex-col gap-1">
+          <label
+            for="newUser.tipo"
+            class="text-sm text-custom-black-100 font-semibold"
+          >
+            Tipo
+          </label>
+          <select
+            class="defaultInput w-full"
+            v-model="newUser.tipo"
+            required
+            :id="`newUser.tipo`"
+          >
+            <option selected value="">Selecione</option>
+            <option :value="RoleTypes.ADMIN">Adminstrador</option>
+            <option :value="RoleTypes.USER">Usuário</option>
+          </select>
         </div>
         <div
           class="col-span-2 flex justify-end gap-4"

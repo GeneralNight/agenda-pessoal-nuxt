@@ -43,9 +43,11 @@ export const useUserStore = defineStore("USERS_STORE", {
       this.creatingUsers = true;
       try {
         this.users = await api.createUser({ body });
+        return "success";
       } catch (error) {
         this.errorCreateUsers = true;
         console.log(error);
+        return undefined;
       } finally {
         this.creatingUsers = false;
       }
