@@ -34,7 +34,7 @@ export type Profile = {
   dataNascimento: Date;
   email: string;
   id: number;
-  nome: "string";
+  nome: string;
   password: string;
   telefone: string;
   username: string;
