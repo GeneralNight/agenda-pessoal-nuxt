@@ -1,32 +1,38 @@
 <script lang="ts" setup>
+import { RoleTypes } from "~~/models";
 const authStore = useAuthStore();
-const { username } = storeToRefs(authStore);
+const { username, roles } = storeToRefs(authStore);
 
 const menu = ref([
   {
     label: "Home",
     path: "/dashboard/",
     icon: "fi fi-ss-house-chimney",
+    disabled: false,
   },
   {
     label: "Contatos",
     path: "/dashboard/contacts",
     icon: "fi fi-sr-phone-flip",
+    disabled: false,
   },
   {
     label: "Pessoas",
     path: "/dashboard/people",
     icon: "fi fi-ss-user",
+    disabled: false,
   },
   {
     label: "Usuários",
     path: "/dashboard/users",
     icon: "fi fi-sr-users-alt",
+    disabled: computed(() => !roles.value.includes(RoleTypes.ADMIN)),
   },
   {
     label: "Meu cadastro",
     path: "/dashboard/profile",
     icon: "fi fi-rs-circle-user",
+    disabled: false,
   },
 ]);
 </script>
@@ -48,7 +54,7 @@ const menu = ref([
           :to="item.path"
           class="w-full py-6 border-b border-[#70707050] bg-white px-6 flex items-center gap-3 text-custom-black font-medium transition-all hover:brightness-95 duration-[.2s]"
           :active-class="'font-bold !text-custom-blue'"
-          v-for="item in menu"
+          v-for="item in menu.filter((v) => !v.disabled)"
         >
           <i :class="[item.icon]" class="flex"></i>
           <span class="">{{ item.label }}</span>

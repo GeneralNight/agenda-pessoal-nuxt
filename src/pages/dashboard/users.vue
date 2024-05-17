@@ -1,10 +1,14 @@
 <script lang="ts" setup>
+import { RoleTypes } from "~~/models";
+
 definePageMeta({
   layout: "dashboard",
 });
 
 const userStore = useUserStore();
+const authStore = useAuthStore();
 const { loadingUsers, errorLoadUsers, users } = storeToRefs(userStore);
+const { roles } = storeToRefs(authStore);
 
 const query = ref("");
 
@@ -27,6 +31,12 @@ watch(
 
 onMounted(() => {
   loadUsers();
+});
+
+onBeforeMount(() => {
+  if (!roles.value.includes(RoleTypes.ADMIN)) {
+    useRouter().push("/dashboard");
+  }
 });
 </script>
 
@@ -87,3 +97,4 @@ onMounted(() => {
     </div>
   </div>
 </template>
+import type { RoleTypes } from '~~/models';
