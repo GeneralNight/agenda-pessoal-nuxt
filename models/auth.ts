@@ -47,3 +47,8 @@ export type GetProfileResponseBody = {
     usuario: Profile;
   };
 };
+
+export type PutProfileResponseBody = {
+  message: string;
+  object: Profile;
+};

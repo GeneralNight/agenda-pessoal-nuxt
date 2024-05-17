@@ -4,7 +4,19 @@ definePageMeta({
 });
 
 const authStore = useAuthStore();
-const { profile, loadingProfile, errorLoadProfile } = storeToRefs(authStore);
+const {
+  profile,
+  loadingProfile,
+  errorLoadProfile,
+  savingProfile,
+  errorSaveProfile,
+} = storeToRefs(authStore);
+
+const saveProfile = () => {
+  if (profile?.value) {
+    authStore.saveProfile(profile.value);
+  }
+};
 
 onMounted(async () => {
   await authStore.loadProfile();
@@ -24,10 +36,13 @@ onMounted(async () => {
       v-if="!loadingProfile && !errorLoadProfile && profile"
     >
       <div class="flex flex-col w-full gap-6 py-6">
-        <span class="text-xl font-semibold text-custom-black">
+        <span class="text-xl font-bold text-custom-black">
           Informações básicas
         </span>
-        <div class="grid grid-cols-2 gap-6 w-full">
+        <form
+          class="grid grid-cols-2 gap-6 w-full"
+          @submit.prevent="saveProfile()"
+        >
           <div class="col-span flex flex-col gap-1">
             <label
               for="profile.nome"
@@ -97,6 +112,52 @@ onMounted(async () => {
               v-model="profile.telefone"
               :id="`profile.telefone`"
             />
+          </div>
+          <div class="col-span-2 flex justify-end">
+            <button
+              :class="{
+                'opacity-75 !bg-custom-black cursor-not-allowed': savingProfile,
+              }"
+              type="submit"
+              class="bg-custom-black px-4 py-2.5 rounded-lg text-white transition-all hover:bg-custom-blue duration-[.2s] font-semibold"
+            >
+              Salvar
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="flex flex-col w-full gap-6 py-6">
+        <span class="text-xl font-bold text-custom-black"> Danger zone </span>
+        <div class="flex flex-col border border-custom-black/50 rounded-lg">
+          <div
+            class="flex items-center justify-between px-4 py-8 border-b border-custom-black/50"
+          >
+            <div class="flex flex-col">
+              <span class="font-bold text-custom-black">Trocar username</span>
+              <span class="text-custom-black-100 text-sm">
+                Troque a maneira de como você acessa nossa plataforma.
+              </span>
+            </div>
+            <button
+              type="button"
+              class="text-red-600 px-4 py-1.5 rounded-lg border border-custom-black/50 bg-[#f6f8fa]"
+            >
+              Trocar
+            </button>
+          </div>
+          <div class="flex items-center justify-between px-4 py-8">
+            <div class="flex flex-col">
+              <span class="font-bold text-custom-black">Trocar senha</span>
+              <span class="text-custom-black-100 text-sm">
+                Troque a senha do seu usuário.
+              </span>
+            </div>
+            <button
+              type="button"
+              class="text-red-600 px-4 py-1.5 rounded-lg border border-custom-black/50 bg-[#f6f8fa]"
+            >
+              Trocar
+            </button>
           </div>
         </div>
       </div>

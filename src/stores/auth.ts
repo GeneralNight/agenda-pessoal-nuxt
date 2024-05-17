@@ -12,6 +12,8 @@ interface IState {
   loadingProfile: boolean;
   errorLoadProfile: boolean;
   profile?: Profile;
+  savingProfile: boolean;
+  errorSaveProfile: boolean;
 }
 
 export const useAuthStore = defineStore("AUTH_STORE", {
@@ -24,6 +26,8 @@ export const useAuthStore = defineStore("AUTH_STORE", {
     loadingProfile: false,
     errorLoadProfile: false,
     profile: undefined,
+    savingProfile: false,
+    errorSaveProfile: false,
   }),
   getters: {},
   actions: {
@@ -75,6 +79,18 @@ export const useAuthStore = defineStore("AUTH_STORE", {
         console.log(error);
       } finally {
         this.loadingProfile = false;
+      }
+    },
+    async saveProfile(body: Profile) {
+      this.errorSaveProfile = false;
+      this.savingProfile = true;
+      try {
+        const res = await api.saveUserProfile({ body });
+        this.profile = res.object;
+      } catch (error) {
+        this.errorSaveProfile = true;
+      } finally {
+        this.savingProfile = false;
       }
     },
   },
