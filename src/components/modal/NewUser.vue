@@ -26,6 +26,7 @@ const close = () => {
 };
 
 const createUser = async () => {
+  if (!validate()) return;
   try {
     await userStore.createUser({
       tipos: [newUser.value.tipo],
@@ -43,6 +44,16 @@ const createUser = async () => {
   } catch (e) {
     console.log(e);
   }
+};
+
+const validate = () => {
+  if (newUser.value.password.length < 8) {
+    return false;
+  }
+  if (newUser.value.password === newUser.value.confirmPassword) {
+    return false;
+  }
+  return true;
 };
 </script>
 
@@ -182,11 +193,23 @@ const createUser = async () => {
             :id="`newUser.dataNascimento`"
           />
         </div>
-        <div class="col-span-2 flex justify-end gap-4">
-          <button class="defaultButton secondary" type="button" @click="close">
+        <div
+          class="col-span-2 flex justify-end gap-4"
+          :class="{
+            'pointer-events-none opacity-50 cursor-not-allowed': creatingUsers,
+          }"
+        >
+          <button
+            class="defaultButton secondary"
+            type="button"
+            @click="close"
+            :disabled="creatingUsers"
+          >
             Cancelar
           </button>
-          <button class="defaultButton" type="submit">Criar usuário</button>
+          <button class="defaultButton" type="submit" :disabled="creatingUsers">
+            Criar usuário
+          </button>
         </div>
       </form>
     </div>
