@@ -12,6 +12,7 @@
   "dependencies": {
     "@flaticon/flaticon-uicons": "^3.2.1",
     "@pinia/nuxt": "^0.5.1",
+    "@vueuse/nuxt": "^10.9.0",
     "nuxt": "^3.11.2",
     "ohmyfetch": "^0.4.21",
     "pinia": "^2.1.7",
