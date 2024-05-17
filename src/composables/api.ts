@@ -1,5 +1,9 @@
 import type { FetchOptions } from "ohmyfetch";
-import type { LoginResponseBody } from "~~/models";
+import type {
+  GetProfileResponseBody,
+  LoginResponseBody,
+  PutProfileResponseBody,
+} from "~~/models";
 
 export default {
   async booktoneFetch<T>(path: string, options?: FetchOptions) {
@@ -19,5 +23,20 @@ export default {
   },
   login(options?: FetchOptions): Promise<LoginResponseBody> {
     return this.booktoneFetch(`auth/login`, { method: "POST", ...options });
+  },
+  getUserProfile(
+    id: number,
+    options?: FetchOptions
+  ): Promise<GetProfileResponseBody> {
+    return this.booktoneFetch(`usuario/buscar/${id}`, {
+      method: "GET",
+      ...options,
+    });
+  },
+  saveUserProfile(options?: FetchOptions): Promise<PutProfileResponseBody> {
+    return this.booktoneFetch(`usuario/atualizar`, {
+      method: "PUT",
+      ...options,
+    });
   },
 };

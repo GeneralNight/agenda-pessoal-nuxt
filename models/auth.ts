@@ -28,3 +28,27 @@ export type LoginResponseBody = {
   tokenType: string;
   username: string;
 };
+
+export type Profile = {
+  cpf: string;
+  dataNascimento: Date;
+  email: string;
+  id: number;
+  nome: "string";
+  password: string;
+  telefone: string;
+  username: string;
+};
+
+export type GetProfileResponseBody = {
+  message: string;
+  object: {
+    tipos: RoleTypes[];
+    usuario: Profile;
+  };
+};
+
+export type PutProfileResponseBody = {
+  message: string;
+  object: Profile;
+};
