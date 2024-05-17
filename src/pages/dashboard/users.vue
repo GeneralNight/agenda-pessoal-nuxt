@@ -10,6 +10,7 @@ const authStore = useAuthStore();
 const { loadingUsers, errorLoadUsers, users } = storeToRefs(userStore);
 const { roles } = storeToRefs(authStore);
 
+const showNewUserModal = ref(false);
 const query = ref("");
 
 const loadUsers = async () => {
@@ -60,6 +61,7 @@ onBeforeMount(() => {
           </div>
         </div>
         <button
+          @click="showNewUserModal = true"
           class="text-white bg-custom-black px-4 py-2.5 rounded-lg transition-all duration-[.2s] hover:bg-custom-blue flex items-center gap-2"
         >
           <i class="fi fi-rr-plus flex"></i>
@@ -95,6 +97,8 @@ onBeforeMount(() => {
         </div>
       </div>
     </div>
+    <Transition name="slide-anchor-left">
+      <ModalNewUser v-if="showNewUserModal" @close="showNewUserModal = false" />
+    </Transition>
   </div>
 </template>
-import type { RoleTypes } from '~~/models';
