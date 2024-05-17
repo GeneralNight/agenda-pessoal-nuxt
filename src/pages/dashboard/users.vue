@@ -14,6 +14,7 @@ const showNewUserModal = ref(false);
 const query = ref("");
 
 const loadUsers = async () => {
+  showNewUserModal.value = false;
   await userStore.loadUsers(query.value);
 };
 
@@ -98,7 +99,11 @@ onBeforeMount(() => {
       </div>
     </div>
     <Transition name="slide-anchor-left">
-      <ModalNewUser v-if="showNewUserModal" @close="showNewUserModal = false" />
+      <ModalNewUser
+        v-if="showNewUserModal"
+        @close="showNewUserModal = false"
+        @refresh="loadUsers()"
+      />
     </Transition>
   </div>
 </template>
