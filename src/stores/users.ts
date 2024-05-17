@@ -6,6 +6,8 @@ interface IState {
   errorLoadUsers: boolean;
   creatingUsers: boolean;
   errorCreateUsers: boolean;
+  savingUsers: boolean;
+  errorSaveUser: boolean;
   users: Profile[];
 }
 
@@ -15,6 +17,8 @@ export const useUserStore = defineStore("USERS_STORE", {
     errorLoadUsers: false,
     creatingUsers: false,
     errorCreateUsers: false,
+    savingUsers: false,
+    errorSaveUser: false,
     users: [],
   }),
   getters: {},
@@ -44,6 +48,18 @@ export const useUserStore = defineStore("USERS_STORE", {
         console.log(error);
       } finally {
         this.creatingUsers = false;
+      }
+    },
+    async saveUser(body: Profile) {
+      this.savingUsers = true;
+      this.errorSaveUser = false;
+      try {
+        this.users = await api.createUser({ body });
+      } catch (error) {
+        this.errorSaveUser = true;
+        console.log(error);
+      } finally {
+        this.savingUsers = false;
       }
     },
   },

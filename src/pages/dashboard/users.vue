@@ -12,9 +12,11 @@ const { roles } = storeToRefs(authStore);
 
 const showNewUserModal = ref(false);
 const query = ref("");
+const editUserProfile = ref();
 
 const loadUsers = async () => {
   showNewUserModal.value = false;
+  editUserProfile.value = undefined;
   await userStore.loadUsers(query.value);
 };
 
@@ -94,6 +96,7 @@ onBeforeMount(() => {
               'border-b border-custom-black/50': index < users.length - 1,
             }"
             :user="user"
+            @edit="editUserProfile = user"
           />
         </div>
       </div>
@@ -103,6 +106,14 @@ onBeforeMount(() => {
         v-if="showNewUserModal"
         @close="showNewUserModal = false"
         @refresh="loadUsers()"
+      />
+    </Transition>
+    <Transition name="slide-anchor-left">
+      <ModalEditUser
+        v-if="editUserProfile"
+        @close="editUserProfile = undefined"
+        @refresh="loadUsers()"
+        :user="editUserProfile"
       />
     </Transition>
   </div>
