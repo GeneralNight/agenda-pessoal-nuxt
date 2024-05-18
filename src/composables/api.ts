@@ -2,6 +2,7 @@ import type { FetchOptions } from "ohmyfetch";
 import type {
   GetProfileResponseBody,
   LoginResponseBody,
+  Person,
   Profile,
   PutProfileResponseBody,
 } from "~~/models";
@@ -48,6 +49,30 @@ export default {
   },
   createUser(options?: FetchOptions): Promise<Profile[]> {
     return this.booktoneFetch(`usuario/salvar`, {
+      method: "POST",
+      ...options,
+    });
+  },
+  getPeople(options?: FetchOptions): Promise<Person[]> {
+    return this.booktoneFetch(`pessoa/pesquisar`, {
+      method: "POST",
+      ...options,
+    });
+  },
+  getPerson(id: string, options?: FetchOptions): Promise<Person> {
+    return this.booktoneFetch(`pessoa/buscar/${id}`, {
+      method: "GET",
+      ...options,
+    });
+  },
+  getPhoto(id: string, options?: FetchOptions): Promise<File> {
+    return this.booktoneFetch(`foto/download/${id}`, {
+      method: "GET",
+      ...options,
+    });
+  },
+  createPerson(options?: FetchOptions): Promise<Person> {
+    return this.booktoneFetch(`pessoa/salvar`, {
       method: "POST",
       ...options,
     });
