@@ -28,7 +28,6 @@ const clear = () => {
 watch(
   query,
   useDebounceFn(() => {
-    if (!query.value.length) return;
     loadUsers();
   }, 1500)
 );
