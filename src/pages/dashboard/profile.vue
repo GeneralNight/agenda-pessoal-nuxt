@@ -12,6 +12,8 @@ const {
   errorSaveProfile,
 } = storeToRefs(authStore);
 
+const action = ref<"change-password" | "change-username" | undefined>();
+
 const saveProfile = () => {
   if (profile?.value) {
     authStore.saveProfile(profile.value);
@@ -141,6 +143,7 @@ onMounted(async () => {
             <button
               type="button"
               class="text-red-600 px-4 py-1.5 rounded-lg border border-custom-black/50 bg-[#f6f8fa]"
+              @click="action = 'change-username'"
             >
               Trocar
             </button>
@@ -153,6 +156,7 @@ onMounted(async () => {
               </span>
             </div>
             <button
+              @click="action = 'change-password'"
               type="button"
               class="text-red-600 px-4 py-1.5 rounded-lg border border-custom-black/50 bg-[#f6f8fa]"
             >
@@ -161,6 +165,13 @@ onMounted(async () => {
           </div>
         </div>
       </div>
+      <Transition name="slide-anchor-left">
+        <ModalValidateCredentials
+          :action="action"
+          v-if="action"
+          @close="action = undefined"
+        />
+      </Transition>
     </div>
   </div>
 </template>

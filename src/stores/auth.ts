@@ -31,7 +31,7 @@ export const useAuthStore = defineStore("AUTH_STORE", {
   }),
   getters: {},
   actions: {
-    async login(body: LoginBody) {
+    async login(body: LoginBody, validate?: boolean) {
       this.errorLogin = false;
       this.logging = true;
       try {
@@ -50,11 +50,15 @@ export const useAuthStore = defineStore("AUTH_STORE", {
         this.username = body.username;
         this.id = res.id;
         localStorage.setItem("keepConnected", `${this.keepConnected}`);
-        useRouter().push("/dashboard");
+        if (!validate) {
+          useRouter().push("/dashboard");
+        }
       } catch (error) {
         this.errorLogin = true;
         console.log(error);
-        useRouter().push("/login");
+        if (!validate) {
+          useRouter().push("/login");
+        }
       } finally {
         this.logging = false;
       }
