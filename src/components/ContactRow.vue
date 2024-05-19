@@ -13,6 +13,7 @@ const { favorites } = storeToRefs(contactStore);
 const props = defineProps<{
   contact: Contact;
 }>();
+const profilePicture = ref("");
 
 const contactText = computed(() => {
   return props.contact.tipoContato === ContactType.EMAIL
@@ -27,21 +28,41 @@ const isFavorite = computed(() => {
 const handleFavorite = async () => {
   await contactStore.handleFavoriteContact(props.contact);
 };
+
+onMounted(async () => {
+  profilePicture.value = `https://ui-avatars.com/api/?name=${
+    props.contact.pessoa.nome.replace(/\s/g, "%20") ?? ""
+  }&background=random`;
+  if (props.contact.pessoa.id) {
+    profilePicture.value = URL.createObjectURL(
+      await api.getPhoto(`${props.contact.pessoa.id}`)
+    );
+  }
+});
 </script>
 
 <template>
   <div class="flex items-center justify-between px-4 py-6">
-    <div class="flex flex-col gap-1">
-      <span class="font-semibold">{{ contact.pessoa.nome }}</span>
-      <div class="flex items-center gap-4">
-        <span class="font-semibold text-custom-black-100 text-sm">{{
-          contactText
-        }}</span>
-        <span class="font-semibold text-custom-black/50 text-sm"
-          >({{ contact.tipoContato }})</span
-        >
+    <div class="flex items-center gap-3">
+      <div
+        class="w-12 h-12 min-w-12 rounded-full bg-cover bg-center bg-no-repeat border border-custom-black/50"
+        :style="{
+          'background-image': 'url(' + profilePicture + ')',
+        }"
+      ></div>
+      <div class="flex flex-col gap-1">
+        <span class="font-semibold">{{ contact.pessoa.nome }}</span>
+        <div class="flex items-center gap-4">
+          <span class="font-semibold text-custom-black-100 text-sm">{{
+            contactText
+          }}</span>
+          <span class="font-semibold text-custom-black/50 text-sm"
+            >({{ contact.tipoContato }})</span
+          >
+        </div>
       </div>
     </div>
+
     <div class="flex gap-3 items-stretch">
       <button
         class="defaultButton secondary flex items-center gap-2"
