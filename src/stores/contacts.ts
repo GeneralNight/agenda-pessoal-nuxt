@@ -46,13 +46,11 @@ export const useContactStore = defineStore("CONTACTS_STORE", {
         this.loadingContacts = false;
       }
     },
-    async loadFavorites(termo?: string) {
+    async loadFavorites() {
       this.errorLoadFavoritesContacts = false;
       this.loadingFavoritesContacts = true;
       try {
-        this.contacts = await api.getFavoriteContacts({
-          body: { termo: termo ?? "" },
-        });
+        this.favorites = (await api.getFavoriteContacts()) ?? [];
       } catch (error) {
         this.errorLoadFavoritesContacts = true;
         console.log(error);

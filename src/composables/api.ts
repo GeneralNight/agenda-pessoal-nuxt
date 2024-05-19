@@ -92,7 +92,7 @@ export default {
   },
   getFavoriteContacts(options?: FetchOptions): Promise<Contact[]> {
     return this.booktoneFetch(`favorito/pesquisar`, {
-      method: "POST",
+      method: "GET",
       ...options,
     });
   },
