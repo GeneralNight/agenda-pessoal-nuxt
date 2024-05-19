@@ -27,3 +27,9 @@ export type CreateContactData = {
   tipoContato: ContactType;
   usuario: Pick<Profile, "id">;
 };
+
+export const ContactTypeList = [
+  { value: ContactType.CELULAR, label: "CELULAR" },
+  { value: ContactType.EMAIL, label: "EMAIL" },
+  { value: ContactType.TELEFONE, label: "TELEFONE" },
+];
