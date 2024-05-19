@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 const props = defineProps<{
-  modelValue: string;
+  modelValue: string | number;
   label: string;
   id: string;
   required: boolean;
   disabled: boolean;
-  items: { label: string; value: string }[];
+  items: { label: string; value: string | number }[];
 }>();
 
-defineEmits<{ (e: "update:modelValue", value: string): void }>();
+defineEmits<{ (e: "update:modelValue", value: string | number): void }>();
 </script>
 
 <template>
