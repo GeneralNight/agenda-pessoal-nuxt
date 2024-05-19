@@ -1,13 +1,38 @@
 <script lang="ts" setup>
+import { MaskTypes } from "~~/models";
 const props = defineProps<{
   modelValue: string;
   label: string;
   id: string;
   required: boolean;
   disabled: boolean;
+  mask?: MaskTypes;
 }>();
 
-defineEmits<{ (e: "update:modelValue", value: string): void }>();
+const emits = defineEmits<{
+  (e: "update:modelValue", value: string): void;
+}>();
+
+const updateVal = (val: string) => {
+  if (props.mask) {
+    switch (props.mask) {
+      case MaskTypes.CEP:
+        emits("update:modelValue", maskCEP(val));
+        break;
+      case MaskTypes.CPF:
+        emits("update:modelValue", maskCPF(val));
+        break;
+      case MaskTypes.CELULAR:
+        emits("update:modelValue", maskCelular(val));
+        break;
+      case MaskTypes.TELEFONE:
+        emits("update:modelValue", maskTelefone(val));
+        break;
+    }
+    return;
+  }
+  emits("update:modelValue", val);
+};
 </script>
 
 <template>
@@ -22,9 +47,7 @@ defineEmits<{ (e: "update:modelValue", value: string): void }>();
     <input
       type="text"
       class="defaultInput w-full"
-      @input.prevent="
-        $emit('update:modelValue', ($event.target as HTMLInputElement).value)
-      "
+      @input.prevent="updateVal(($event.target as HTMLInputElement).value)"
       :value="modelValue"
       :required="required"
       :id="id"

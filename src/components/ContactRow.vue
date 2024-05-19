@@ -42,8 +42,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex items-center justify-between px-4 py-6">
-    <div class="flex items-center gap-3">
+  <div class="flex items-center justify-between px-4 py-6 flex-wrap gap-4">
+    <div class="flex items-center gap-3 flex-wrap">
       <div
         class="w-12 h-12 min-w-12 rounded-full bg-cover bg-center bg-no-repeat border border-custom-black/50"
         :style="{
@@ -51,8 +51,10 @@ onMounted(async () => {
         }"
       ></div>
       <div class="flex flex-col gap-1">
-        <span class="font-semibold">{{ contact.pessoa.nome }}</span>
-        <div class="flex items-center gap-4">
+        <span class="font-semibold whitespace-break-spaces">{{
+          contact.pessoa.nome
+        }}</span>
+        <div class="flex items-center gap-4 flex-wrap">
           <span class="font-semibold text-custom-black-100 text-sm">{{
             contactText
           }}</span>
@@ -63,7 +65,7 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div class="flex gap-3 items-stretch">
+    <div class="flex gap-3 items-stretch flex-wrap">
       <button
         class="defaultButton secondary flex items-center gap-2"
         @click="emits('remove')"

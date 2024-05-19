@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { CreateContactData } from "~~/models";
-import { ContactType, ContactTypeList } from "~~/models";
+import { ContactType, ContactTypeList, MaskTypes } from "~~/models";
 
 const emits = defineEmits<{
   (e: "close"): void;
@@ -117,6 +117,11 @@ onMounted(() => {
             :id="'newContact.telefone'"
             :required="true"
             :disabled="false"
+            :mask="
+              newContact.tipoContato === ContactType.TELEFONE
+                ? MaskTypes.TELEFONE
+                : MaskTypes.CELULAR
+            "
           />
         </div>
         <div class="col-span flex flex-col gap-1 justify-center">

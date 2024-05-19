@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { CreatePersonData } from "~~/models";
-import { brazilianStates, worldCountries } from "~~/models";
+import { MaskTypes, brazilianStates, worldCountries } from "~~/models";
 
 const emits = defineEmits<{
   (e: "close"): void;
@@ -92,6 +92,7 @@ watch(
             :id="'newPerson.cpf'"
             :required="true"
             :disabled="false"
+            :mask="MaskTypes.CPF"
           />
         </div>
         <div class="col-span-2">
@@ -104,6 +105,7 @@ watch(
             :id="'newPerson.endereco.cep'"
             :required="true"
             :disabled="false"
+            :mask="MaskTypes.CEP"
           />
         </div>
         <div class="col-span flex flex-col gap-1">

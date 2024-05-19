@@ -11,7 +11,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="flex items-center justify-between px-4 py-6">
+  <div class="flex items-center justify-between px-4 py-6 flex-wrap gap-3">
     <span class="font-semibold">{{ user.nome }}</span>
     <button
       class="defaultButton flex items-center gap-2"

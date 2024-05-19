@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { RoleTypes } from "~~/models";
+import { MaskTypes, RoleTypeList, RoleTypes } from "~~/models";
 const emits = defineEmits<{
   (e: "close"): void;
   (e: "refresh"): void;
@@ -29,7 +29,7 @@ const createUser = async () => {
   if (!validate()) return;
   try {
     const res = await userStore.createUser({
-      tipos: [newUser.value.tipo],
+      tipos: [newUser.value.tipo as RoleTypes],
       usuario: {
         cpf: newUser.value.cpf,
         dataNascimento: newUser.value.dataNascimento,
@@ -76,142 +76,88 @@ const validate = () => {
       </div>
       <form class="grid grid-cols-2 gap-8 p-6" @submit.prevent="createUser()">
         <div class="col-span flex flex-col gap-1">
-          <label
-            for="newUser.nome"
-            class="text-sm text-custom-black-100 font-semibold"
-          >
-            Nome
-          </label>
-          <input
-            type="text"
-            class="defaultInput w-full"
+          <InputsText
             v-model="newUser.nome"
-            required
-            :id="`newUser.nome`"
+            :label="'Nome'"
+            :id="'newUser.nome'"
+            :required="true"
+            :disabled="false"
           />
         </div>
         <div class="col-span flex flex-col gap-1">
-          <label
-            for="newUser.cpf"
-            class="text-sm text-custom-black-100 font-semibold"
-          >
-            CPF
-          </label>
-          <input
-            type="text"
-            class="defaultInput w-full"
+          <InputsText
             v-model="newUser.cpf"
-            required
-            :id="`newUser.cpf`"
+            :label="'CPF'"
+            :id="'newUser.cpf'"
+            :required="true"
+            :disabled="false"
+            :mask="MaskTypes.CPF"
           />
         </div>
         <div class="col-span-2 flex flex-col gap-1">
-          <label
-            for="newUser.email"
-            class="text-sm text-custom-black-100 font-semibold"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            class="defaultInput w-full"
+          <InputsText
             v-model="newUser.email"
-            required
-            :id="`newUser.email`"
+            :label="'Email'"
+            :id="'newUser.email'"
+            :required="true"
+            :disabled="false"
           />
         </div>
         <div class="col-span flex flex-col gap-1">
-          <label
-            for="newUser.telefone"
-            class="text-sm text-custom-black-100 font-semibold"
-          >
-            Telefone
-          </label>
-          <input
-            type="tel"
-            class="defaultInput w-full"
+          <InputsText
             v-model="newUser.telefone"
-            required
-            :id="`newUser.telefone`"
+            :label="'Telefone'"
+            :id="'newUser.telefone'"
+            :required="true"
+            :disabled="false"
+            :mask="MaskTypes.CELULAR"
           />
         </div>
         <div class="col-span flex flex-col gap-1">
-          <label
-            for="newUser.username"
-            class="text-sm text-custom-black-100 font-semibold"
-          >
-            Usuário
-          </label>
-          <input
-            type="text"
-            class="defaultInput w-full"
+          <InputsText
             v-model="newUser.username"
-            required
-            :id="`newUser.username`"
+            :label="'Usuário'"
+            :id="'newUser.username'"
+            :required="true"
+            :disabled="false"
           />
         </div>
         <div class="col-span flex flex-col gap-1">
-          <label
-            for="newUser.password"
-            class="text-sm text-custom-black-100 font-semibold"
-          >
-            Senha
-          </label>
-          <input
-            type="password"
-            class="defaultInput w-full"
+          <InputsPassword
             v-model="newUser.password"
-            required
-            :id="`newUser.password`"
+            :label="'Senha'"
+            :id="'newUser.password'"
+            :required="true"
+            :disabled="false"
           />
         </div>
         <div class="col-span flex flex-col gap-1">
-          <label
-            for="newUser.confirmPassword"
-            class="text-sm text-custom-black-100 font-semibold"
-          >
-            Confirme a senha
-          </label>
-          <input
-            type="password"
-            class="defaultInput w-full"
+          <InputsPassword
             v-model="newUser.confirmPassword"
-            required
-            :id="`newUser.confirmPassword`"
+            :label="'Confirme a senha'"
+            :id="'newUser.confirmPassword'"
+            :required="true"
+            :disabled="false"
           />
         </div>
         <div class="col-span flex flex-col gap-1">
-          <label
-            for="newUser.dataNascimento"
-            class="text-sm text-custom-black-100 font-semibold"
-          >
-            Data de Nascimento
-          </label>
-          <input
-            type="date"
-            class="defaultInput w-full"
+          <InputsDate
             v-model="newUser.dataNascimento"
-            required
-            :id="`newUser.dataNascimento`"
+            :label="'Data de nascimento'"
+            :id="'newUser.dataNascimento'"
+            :required="true"
+            :disabled="false"
           />
         </div>
         <div class="col-span flex flex-col gap-1">
-          <label
-            for="newUser.tipo"
-            class="text-sm text-custom-black-100 font-semibold"
-          >
-            Tipo
-          </label>
-          <select
-            class="defaultInput w-full"
+          <InputsSelect
             v-model="newUser.tipo"
-            required
-            :id="`newUser.tipo`"
-          >
-            <option selected value="">Selecione</option>
-            <option :value="RoleTypes.ADMIN">Adminstrador</option>
-            <option :value="RoleTypes.USER">Usuário</option>
-          </select>
+            :label="'Tipo'"
+            :id="'newUser.tipo'"
+            :required="true"
+            :disabled="false"
+            :items="RoleTypeList"
+          />
         </div>
         <div
           class="col-span-2 flex justify-end gap-4"

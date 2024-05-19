@@ -52,3 +52,8 @@ export type PutProfileResponseBody = {
   message: string;
   object: Profile;
 };
+
+export const RoleTypeList = [
+  { value: RoleTypes.ADMIN, label: "ROLE_ADMIN" },
+  { value: RoleTypes.USER, label: "ROLE_USER" },
+];
