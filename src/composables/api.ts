@@ -90,6 +90,12 @@ export default {
       ...options,
     });
   },
+  getFavoriteContacts(options?: FetchOptions): Promise<Contact[]> {
+    return this.booktoneFetch(`favorito/pesquisar`, {
+      method: "POST",
+      ...options,
+    });
+  },
   saveContact(options?: FetchOptions): Promise<Contact> {
     return this.booktoneFetch(`contato/salvar`, {
       method: "POST",
@@ -104,6 +110,18 @@ export default {
   },
   removeContact(id: string, options?: FetchOptions): Promise<void> {
     return this.booktoneFetch(`contato/remover/${id}`, {
+      method: "DELETE",
+      ...options,
+    });
+  },
+  favoriteContact(options?: FetchOptions): Promise<void> {
+    return this.booktoneFetch(`favorito/salvar`, {
+      method: "POST",
+      ...options,
+    });
+  },
+  removeFavoriteContact(id: string, options?: FetchOptions): Promise<void> {
+    return this.booktoneFetch(`favorito/remover/${id}`, {
       method: "DELETE",
       ...options,
     });

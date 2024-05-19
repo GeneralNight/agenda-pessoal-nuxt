@@ -4,6 +4,8 @@ import type { Contact, CreateContactData } from "~~/models/contact";
 interface IState {
   loadingContacts: boolean;
   errorLoadContacts: boolean;
+  loadingFavoritesContacts: boolean;
+  errorLoadFavoritesContacts: boolean;
   creatingContact: boolean;
   errorCreateContact: boolean;
   savingContact: boolean;
@@ -11,12 +13,15 @@ interface IState {
   errorRemoveContact: boolean;
   removingContact: boolean;
   contacts: Contact[];
+  favorites: Contact[];
 }
 
 export const useContactStore = defineStore("CONTACTS_STORE", {
   state: (): IState => ({
     loadingContacts: false,
     errorLoadContacts: false,
+    loadingFavoritesContacts: false,
+    errorLoadFavoritesContacts: false,
     creatingContact: false,
     errorCreateContact: false,
     savingContact: false,
@@ -24,6 +29,7 @@ export const useContactStore = defineStore("CONTACTS_STORE", {
     errorRemoveContact: false,
     removingContact: false,
     contacts: [],
+    favorites: [],
   }),
   getters: {},
   actions: {
@@ -32,6 +38,34 @@ export const useContactStore = defineStore("CONTACTS_STORE", {
       this.loadingContacts = true;
       try {
         this.contacts = await api.getContacts({ body: { termo: termo ?? "" } });
+        await this.loadFavorites();
+      } catch (error) {
+        this.errorLoadContacts = true;
+        console.log(error);
+      } finally {
+        this.loadingContacts = false;
+      }
+    },
+    async loadFavorites(termo?: string) {
+      this.errorLoadFavoritesContacts = false;
+      this.loadingFavoritesContacts = true;
+      try {
+        this.contacts = await api.getFavoriteContacts({
+          body: { termo: termo ?? "" },
+        });
+      } catch (error) {
+        this.errorLoadFavoritesContacts = true;
+        console.log(error);
+      } finally {
+        this.loadingFavoritesContacts = false;
+      }
+    },
+    async loadPersonContacts(id: string) {
+      this.errorLoadContacts = false;
+      this.loadingContacts = true;
+      try {
+        this.contacts = await api.getPersonContacts(`${id}`);
+        await this.loadFavorites();
       } catch (error) {
         this.errorLoadContacts = true;
         console.log(error);
@@ -67,17 +101,30 @@ export const useContactStore = defineStore("CONTACTS_STORE", {
         this.savingContact = false;
       }
     },
-    async removeContact(person: Contact) {
+    async removeContact(contact: Contact) {
       this.errorRemoveContact = false;
       this.removingContact = true;
       try {
-        await api.deletePerson(`${person.id}`);
-        this.loadContacts();
+        await api.removeContact(`${contact.id}`);
+        return "success";
       } catch (error) {
         this.errorRemoveContact = true;
+        return undefined;
       } finally {
         this.removingContact = false;
       }
+    },
+    async handleFavoriteContact(contact: Contact) {
+      try {
+        let index = this.favorites.findIndex((v) => v.id === contact.id);
+        if (index > -1) {
+          await api.removeFavoriteContact(`${contact.id}`);
+          this.favorites.splice(index, 1);
+        } else {
+          await api.favoriteContact({ body: { id: contact.id } });
+          this.favorites.push(contact);
+        }
+      } catch (error) {}
     },
   },
 });
