@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { RoleTypes, type Person } from "~~/models";
+import { type Person } from "~~/models";
 
 definePageMeta({
   layout: "dashboard",
@@ -51,19 +51,12 @@ const clear = () => {
 watch(
   query,
   useDebounceFn(() => {
-    if (!query.value.length) return;
     loadPeople();
   }, 1500)
 );
 
 onMounted(() => {
   loadPeople();
-});
-
-onBeforeMount(() => {
-  if (!roles.value.includes(RoleTypes.ADMIN)) {
-    useRouter().push("/dashboard");
-  }
 });
 </script>
 

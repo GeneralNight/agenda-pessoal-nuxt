@@ -13,6 +13,7 @@ interface IState {
   editingPeople: boolean;
   errorEditPeople: boolean;
   people: Person[];
+  currentPersonContact?: Person;
 }
 
 export const usePeopleStore = defineStore("PEOPLE_STORE", {
@@ -28,6 +29,7 @@ export const usePeopleStore = defineStore("PEOPLE_STORE", {
     editingPeople: false,
     errorEditPeople: false,
     people: [],
+    currentPersonContact: undefined,
   }),
   getters: {},
   actions: {

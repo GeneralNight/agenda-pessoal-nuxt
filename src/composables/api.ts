@@ -6,6 +6,7 @@ import type {
   Profile,
   PutProfileResponseBody,
 } from "~~/models";
+import type { Contact } from "~~/models/contact";
 
 export default {
   async booktoneFetch<T>(path: string, options?: FetchOptions) {
@@ -79,6 +80,48 @@ export default {
   },
   deletePerson(id: string, options?: FetchOptions): Promise<void> {
     return this.booktoneFetch(`pessoa/remover/${id}`, {
+      method: "DELETE",
+      ...options,
+    });
+  },
+  getContacts(options?: FetchOptions): Promise<Contact[]> {
+    return this.booktoneFetch(`contato/pesquisar`, {
+      method: "POST",
+      ...options,
+    });
+  },
+  getFavoriteContacts(options?: FetchOptions): Promise<Contact[]> {
+    return this.booktoneFetch(`favorito/pesquisar`, {
+      method: "GET",
+      ...options,
+    });
+  },
+  saveContact(options?: FetchOptions): Promise<Contact> {
+    return this.booktoneFetch(`contato/salvar`, {
+      method: "POST",
+      ...options,
+    });
+  },
+  getPersonContacts(id: string, options?: FetchOptions): Promise<Contact[]> {
+    return this.booktoneFetch(`contato/listar/${id}`, {
+      method: "GET",
+      ...options,
+    });
+  },
+  removeContact(id: string, options?: FetchOptions): Promise<void> {
+    return this.booktoneFetch(`contato/remover/${id}`, {
+      method: "DELETE",
+      ...options,
+    });
+  },
+  favoriteContact(options?: FetchOptions): Promise<void> {
+    return this.booktoneFetch(`favorito/salvar`, {
+      method: "POST",
+      ...options,
+    });
+  },
+  removeFavoriteContact(id: string, options?: FetchOptions): Promise<void> {
+    return this.booktoneFetch(`favorito/remover/${id}`, {
       method: "DELETE",
       ...options,
     });

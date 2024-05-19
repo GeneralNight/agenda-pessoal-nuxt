@@ -12,6 +12,11 @@ const props = defineProps<{
 
 const profilePicture = ref("");
 
+const openContacts = () => {
+  usePeopleStore().currentPersonContact = props.person;
+  useRouter().push(`/dashboard/people/${props.person.id}`);
+};
+
 onMounted(async () => {
   profilePicture.value = `https://ui-avatars.com/api/?name=${
     props.person.nome.replace(/\s/g, "%20") ?? ""
@@ -43,12 +48,16 @@ onMounted(async () => {
         <i class="fi fi-ss-trash flex"></i>
       </button>
       <button
-        class="defaultButton flex items-center gap-2"
+        class="defaultButton secondary flex items-center gap-2"
         @click="emits('edit')"
       >
         <i class="fi fi-ss-pencil flex"></i>
-
-        <span> Editar </span>
+      </button>
+      <button
+        @click="openContacts()"
+        class="defaultButton secondary flex items-center gap-2"
+      >
+        <i class="fi fi-sr-phone-flip flex"></i>
       </button>
     </div>
   </div>
