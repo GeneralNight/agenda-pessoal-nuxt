@@ -8,24 +8,16 @@ const emits = defineEmits<{
 }>();
 
 const contactStore = useContactStore();
-const peopleStore = usePeopleStore();
 const { creatingContact, errorCreateContact } = storeToRefs(contactStore);
-const { loadingPeople, errorLoadPeople, people } = storeToRefs(peopleStore);
 
 const newContact = ref<CreateContactData>({
   email: "",
-  pessoa: { id: 0 },
+  pessoa: { id: usePeopleStore().currentPersonContact?.id ?? 0 },
   privado: false,
   tag: "",
   telefone: "",
   tipoContato: ContactType.CELULAR,
   usuario: { id: useAuthStore().id ?? 0 },
-});
-
-const peopleList = computed(() => {
-  return people.value.map((v) => {
-    return { label: v.nome, value: v.id };
-  });
 });
 
 const createContact = async () => {
@@ -39,18 +31,10 @@ const createContact = async () => {
   }
 };
 
-const loadPeopleList = async () => {
-  await usePeopleStore().loadPeople();
-};
-
 const close = () => {
   if (creatingContact.value) return;
   emits("close");
 };
-
-onMounted(() => {
-  loadPeopleList();
-});
 </script>
 
 <template>
@@ -72,16 +56,6 @@ onMounted(() => {
         class="grid grid-cols-2 gap-8 p-6"
         @submit.prevent="createContact()"
       >
-        <div class="col-span flex flex-col gap-1">
-          <InputsSelect
-            v-model="newContact.pessoa.id"
-            :label="'Pessoa'"
-            :id="'newContact.pessoa'"
-            :required="true"
-            :disabled="false"
-            :items="peopleList"
-          />
-        </div>
         <div class="col-span flex flex-col gap-1">
           <InputsSelect
             v-model="newContact.tipoContato"
