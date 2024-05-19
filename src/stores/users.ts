@@ -42,7 +42,7 @@ export const useUserStore = defineStore("USERS_STORE", {
       this.errorCreateUsers = false;
       this.creatingUsers = true;
       try {
-        this.users = await api.createUser({ body });
+        await api.createUser({ body });
         return "success";
       } catch (error) {
         this.errorCreateUsers = true;
@@ -56,10 +56,12 @@ export const useUserStore = defineStore("USERS_STORE", {
       this.savingUsers = true;
       this.errorSaveUser = false;
       try {
-        this.users = await api.createUser({ body });
+        await api.createUser({ body });
+        return "success";
       } catch (error) {
         this.errorSaveUser = true;
         console.log(error);
+        return undefined;
       } finally {
         this.savingUsers = false;
       }
