@@ -77,4 +77,10 @@ export default {
       ...options,
     });
   },
+  deletePerson(id: string, options?: FetchOptions): Promise<void> {
+    return this.booktoneFetch(`pessoa/remover/${id}`, {
+      method: "DELETE",
+      ...options,
+    });
+  },
 };

@@ -8,6 +8,10 @@ interface IState {
   errorCreatePeople: boolean;
   savingPeople: boolean;
   errorSavePeople: boolean;
+  removingPeople: boolean;
+  errorRemovePeople: boolean;
+  editingPeople: boolean;
+  errorEditPeople: boolean;
   people: Person[];
 }
 
@@ -19,6 +23,10 @@ export const usePeopleStore = defineStore("PEOPLE_STORE", {
     errorCreatePeople: false,
     savingPeople: false,
     errorSavePeople: false,
+    removingPeople: false,
+    errorRemovePeople: false,
+    editingPeople: false,
+    errorEditPeople: false,
     people: [],
   }),
   getters: {},
@@ -49,18 +57,32 @@ export const usePeopleStore = defineStore("PEOPLE_STORE", {
         this.creatingPeople = false;
       }
     },
-    // async savePeople(body: Profile) {
-    //   this.savingPeople = true;
-    //   this.errorSavePeople = false;
-    //   try {
-    //     this.people = await api.createPeople({ body });
-    //   } catch (error) {
-    //     this.errorSavePeople = true;
-    //     console.log(error);
-    //   } finally {
-    //     this.savingPeople = false;
-    //   }
-    // },
+    async removePerson(person: Person) {
+      this.errorRemovePeople = false;
+      this.removingPeople = true;
+      try {
+        await api.deletePerson(`${person.id}`);
+        this.loadPeople();
+      } catch (error) {
+        this.errorRemovePeople = true;
+      } finally {
+        this.removingPeople = false;
+      }
+    },
+    async savePeople(body: Person) {
+      this.savingPeople = true;
+      this.errorSavePeople = false;
+      try {
+        await api.createPerson({ body });
+        return "success";
+      } catch (error) {
+        this.errorSavePeople = true;
+        console.log(error);
+        return undefined;
+      } finally {
+        this.savingPeople = false;
+      }
+    },
   },
 });
 

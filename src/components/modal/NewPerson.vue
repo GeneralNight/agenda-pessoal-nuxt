@@ -171,7 +171,7 @@ watch(
           <button
             class="defaultButton secondary"
             type="button"
-            @click="close"
+            @click="close()"
             :disabled="creatingPeople"
           >
             Cancelar

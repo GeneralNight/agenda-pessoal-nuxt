@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { RoleTypes } from "~~/models";
+import { RoleTypes, type Person } from "~~/models";
 
 definePageMeta({
   layout: "dashboard",
@@ -7,18 +7,41 @@ definePageMeta({
 
 const peopleStore = usePeopleStore();
 const authStore = useAuthStore();
-const { loadingPeople, errorLoadPeople, people } = storeToRefs(peopleStore);
+const {
+  loadingPeople,
+  errorLoadPeople,
+  people,
+  errorRemovePeople,
+  removingPeople,
+} = storeToRefs(peopleStore);
 const { roles } = storeToRefs(authStore);
 
 const showNewPersonModal = ref(false);
 const query = ref("");
-const editPersonProfile = ref();
+const editPersonProfile = ref<Person | undefined>();
+const removePersonProfile = ref<Person | undefined>();
 
 const loadPeople = async () => {
   showNewPersonModal.value = false;
   editPersonProfile.value = undefined;
   await peopleStore.loadPeople(query.value);
 };
+
+const removePerson = async () => {
+  if (!removePersonProfile.value) {
+    return;
+  }
+  await peopleStore.removePerson(removePersonProfile.value);
+  if (!errorLoadPeople.value) {
+    removePersonProfile.value = undefined;
+  }
+};
+
+const confirmRemoveText = computed(() => {
+  return `Deseja mesmo remover a pessoa ${
+    removePersonProfile.value?.nome ?? ""
+  }?`;
+});
 
 const clear = () => {
   query.value = "";
@@ -97,6 +120,7 @@ onBeforeMount(() => {
             }"
             :person="person"
             @edit="editPersonProfile = person"
+            @remove="removePersonProfile = person"
           />
         </div>
       </div>
@@ -114,6 +138,15 @@ onBeforeMount(() => {
         @close="editPersonProfile = undefined"
         @refresh="loadPeople()"
         :person="editPersonProfile"
+      />
+    </Transition>
+    <Transition name="slide-anchor-left">
+      <ModalConfirmRemove
+        v-if="removePersonProfile"
+        @close="removePersonProfile = undefined"
+        @confirm="removePerson"
+        :text="confirmRemoveText"
+        :removing="removingPeople"
       />
     </Transition>
   </div>
