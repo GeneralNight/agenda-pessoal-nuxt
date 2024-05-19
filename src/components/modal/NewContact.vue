@@ -1,0 +1,87 @@
+<script lang="ts" setup>
+import type { CreateContactData } from "~~/models";
+import { ContactType } from "~~/models";
+
+const emits = defineEmits<{
+  (e: "close"): void;
+  (e: "refresh"): void;
+}>();
+
+const contactStore = useContactStore();
+const { creatingContact, errorCreateContact } = storeToRefs(contactStore);
+
+const newContact = ref<CreateContactData>({
+  email: "",
+  pessoa: { id: 0 },
+  privado: false,
+  tag: "",
+  telefone: "",
+  tipoContato: ContactType.CELULAR,
+  usuario: { id: 0 },
+});
+
+const createContact = async () => {
+  try {
+    const res = await contactStore.createContact(newContact.value);
+    if (res === "success") {
+      emits("refresh");
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+const close = () => {
+  if (creatingContact.value) return;
+  emits("close");
+};
+</script>
+
+<template>
+  <div
+    class="fixed bg-black/50 backdrop-blur-lg flex items-center justify-center px-4 py-10 inset-0 h-full w-full"
+  >
+    <div
+      class="flex flex-col bg-white rounded-lg overflow-hidden w-full max-w-[640px]"
+    >
+      <div
+        class="flex items-center justify-between border-b border-custom-black/50 p-4 w-full"
+      >
+        <span class="text-xl font-bold">Novo Contato</span>
+        <button @click="close">
+          <i class="fi fi-br-cross flex"></i>
+        </button>
+      </div>
+      <form
+        class="grid grid-cols-2 gap-8 p-6"
+        @submit.prevent="createContact()"
+      >
+        <div class="col-span flex flex-col gap-1"></div>
+
+        <div
+          class="col-span-2 flex justify-end gap-4"
+          :class="{
+            'pointer-events-none opacity-50 cursor-not-allowed':
+              creatingContact,
+          }"
+        >
+          <button
+            class="defaultButton secondary"
+            type="button"
+            @click="close()"
+            :disabled="creatingContact"
+          >
+            Cancelar
+          </button>
+          <button
+            class="defaultButton"
+            type="submit"
+            :disabled="creatingContact"
+          >
+            Criar contato
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>
