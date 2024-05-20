@@ -1,14 +1,12 @@
 <script lang="ts" setup>
-import { RoleTypes } from "~~/models";
-
 definePageMeta({
   layout: "dashboard",
+  middleware: ["logged-in", "is-admin"],
 });
 
 const userStore = useUserStore();
-const authStore = useAuthStore();
+
 const { loadingUsers, errorLoadUsers, users } = storeToRefs(userStore);
-const { roles } = storeToRefs(authStore);
 
 const showNewUserModal = ref(false);
 const query = ref("");
@@ -36,11 +34,11 @@ onMounted(() => {
   loadUsers();
 });
 
-onBeforeMount(() => {
-  if (!roles.value.includes(RoleTypes.ADMIN)) {
-    useRouter().push("/dashboard");
-  }
-});
+// onBeforeMount(() => {
+//   if (!useProfile.profileType().value?.includes(RoleTypes.ADMIN)) {
+//     useRouter().push("/dashboard");
+//   }
+// });
 </script>
 
 <template>

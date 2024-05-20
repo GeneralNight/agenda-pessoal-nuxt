@@ -1,33 +1,36 @@
 export default defineNuxtPlugin(({ hook }) => {
-  hook("app:created", async () => {
+  hook("app:mounted", async () => {
     const pinia = usePinia();
     const route = useRoute();
     const authStore = useAuthStore(pinia);
     if (process.client) {
-      authStore.keepConnected =
+      if (
         localStorage.getItem("keepConnected") !== null &&
-        localStorage.getItem("keepConnected") === "true";
-
-      if (useRoute().name?.toString().includes("dashboard")) {
-        navigateTo(`/loading?redirect=${useRoute().path}`);
-      }
-
-      if (authStore.keepConnected) {
+        localStorage.getItem("keepConnected") === "true"
+      ) {
         try {
-          await authStore.login(
-            {
+          if (
+            localStorage.getItem("username") !== null &&
+            localStorage.getItem("password") !== null
+          ) {
+            await authStore.login({
               username: localStorage.getItem("username") ?? "",
               password: localStorage.getItem("password") ?? "",
-            },
-            true
-          );
-          navigateTo("/dashboard");
+            });
+          }
         } catch (error) {
-          navigateTo("/login");
+          if (route.name !== "login") {
+            navigateTo(
+              useRoute().query.redirect?.toString() ??
+                `/login?redirect=${route.fullPath}`
+            );
+          }
         }
       } else {
-        authStore.logout();
-        navigateTo("/login");
+        navigateTo(
+          useRoute().query.redirect?.toString() ??
+            `/login?redirect=${route.fullPath}`
+        );
       }
     }
   });

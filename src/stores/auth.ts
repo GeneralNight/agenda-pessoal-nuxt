@@ -1,83 +1,82 @@
 import { acceptHMRUpdate, defineStore } from "pinia";
 import api from "~/composables/api";
-import type { LoginBody, Profile, RoleTypes } from "~~/models";
+import type { LoginBody, Profile } from "~~/models";
 
 interface IState {
   logging: boolean;
   errorLogin: boolean;
   keepConnected: boolean;
-  roles: RoleTypes[];
-  username: string;
-  id?: number;
   loadingProfile: boolean;
   errorLoadProfile: boolean;
-  profile?: Profile;
   savingProfile: boolean;
   errorSaveProfile: boolean;
 }
 
 export const useAuthStore = defineStore("AUTH_STORE", {
   state: (): IState => ({
-    roles: [],
     logging: false,
     errorLogin: false,
     keepConnected: false,
-    username: "",
     loadingProfile: false,
     errorLoadProfile: false,
-    profile: undefined,
     savingProfile: false,
     errorSaveProfile: false,
   }),
   getters: {},
   actions: {
-    async login(body: LoginBody, validate?: boolean) {
+    async login(body: LoginBody, noRedirect?: boolean) {
       this.errorLogin = false;
       this.logging = true;
       try {
         const res = await api.login({ body });
+        await this.loadProfile(res.id);
 
-        localStorage.setItem("token", `${res.accessToken}`);
-        this.roles = res.tipos;
+        this.setLocalStorageToken(`${res.accessToken}`);
+        this.handleKeepConnectedState(body);
 
-        if (this.keepConnected) {
-          localStorage.setItem("username", `${body.username}`);
-          localStorage.setItem("password", `${body.password}`);
-        } else {
-          localStorage.removeItem("username");
-          localStorage.removeItem("password");
-        }
-        this.username = body.username;
-        this.id = res.id;
-        localStorage.setItem("keepConnected", `${this.keepConnected}`);
-        if (!validate) {
-          useRouter().push("/dashboard");
+        if (!noRedirect) {
+          navigateTo(useRoute().query.redirect?.toString() ?? "/dashboard");
         }
       } catch (error) {
         this.errorLogin = true;
-        console.log(error);
-        if (!validate) {
-          useRouter().push("/login");
-        }
+        throw new Error(`${error}`);
       } finally {
         this.logging = false;
       }
     },
+    setLocalStorageToken(token: string) {
+      localStorage.setItem("token", `${token}`);
+    },
+    handleKeepConnectedState(body: LoginBody) {
+      if (this.keepConnected) {
+        localStorage.setItem("username", `${body.username}`);
+        localStorage.setItem("password", `${body.password}`);
+      } else {
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
+      }
+    },
     logout() {
+      useProfile.profile().value = undefined;
       localStorage.removeItem("username");
       localStorage.removeItem("password");
       useRouter().push("/login");
     },
-    async loadProfile() {
+    async loadProfile(id: number) {
+      if (useProfile.profile().value) {
+        return;
+      }
       this.errorLoadProfile = false;
       this.loadingProfile = true;
       try {
-        if (!this.id) {
+        if (!id) {
           this.logout();
           return;
         }
-        const res = await api.getUserProfile(this.id);
-        this.profile = res.object.usuario;
+        const res = await api.getUserProfile(id);
+
+        useProfile.profile().value = res.object.usuario;
+        useProfile.profileType().value = res.object.tipos;
       } catch (error) {
         this.errorLoadProfile = true;
         console.log(error);
@@ -90,7 +89,7 @@ export const useAuthStore = defineStore("AUTH_STORE", {
       this.savingProfile = true;
       try {
         const res = await api.saveUserProfile({ body });
-        this.profile = res.object;
+        useProfile.profile().value = res.object;
       } catch (error) {
         this.errorSaveProfile = true;
       } finally {

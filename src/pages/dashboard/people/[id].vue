@@ -3,6 +3,7 @@ import type { Contact } from "~~/models";
 
 definePageMeta({
   layout: "dashboard",
+  middleware: "logged-in",
 });
 const peopleStore = usePeopleStore();
 const { currentPersonContact } = storeToRefs(peopleStore);

@@ -17,7 +17,7 @@ const newContact = ref<CreateContactData>({
   tag: "",
   telefone: "",
   tipoContato: ContactType.CELULAR,
-  usuario: { id: useAuthStore().id ?? 0 },
+  usuario: { id: useProfile.profile().value?.id ?? 0 },
 });
 
 const createContact = async () => {

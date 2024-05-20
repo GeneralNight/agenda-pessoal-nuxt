@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { RoleTypes } from "~~/models";
 const authStore = useAuthStore();
-const { username, roles } = storeToRefs(authStore);
 
 const menu = ref([
   {
@@ -26,7 +25,9 @@ const menu = ref([
     label: "Usuários",
     path: "/dashboard/users",
     icon: "fi fi-sr-users-alt",
-    disabled: computed(() => !roles.value.includes(RoleTypes.ADMIN)),
+    disabled: computed(
+      () => !useProfile.profileType().value?.includes(RoleTypes.ADMIN)
+    ),
   },
   {
     label: "Meu cadastro",
@@ -62,7 +63,9 @@ const menu = ref([
       </div>
     </div>
     <div class="flex flex-col gap-1 items-start p-4 py-6 customShadow">
-      <span class="font-semibold">Olá, {{ username }}</span>
+      <span class="font-semibold"
+        >Olá, {{ useProfile.profile().value?.username ?? "" }}</span
+      >
       <button
         class="text-[#e74c3c] text-sm transition-all hover:brightness-90 duration-[.2s]"
         @click="authStore.logout"

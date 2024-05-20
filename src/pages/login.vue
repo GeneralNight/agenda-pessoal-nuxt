@@ -13,6 +13,13 @@ const { keepConnected, logging, errorLogin } = storeToRefs(authStore);
 const handleLoginForm = async () => {
   await authStore.login(loginFormData.value);
 };
+
+watch(
+  () => keepConnected.value,
+  () => {
+    localStorage.setItem("keepConnected", `${keepConnected.value}`);
+  }
+);
 </script>
 
 <template>

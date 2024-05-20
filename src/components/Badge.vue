@@ -9,7 +9,7 @@ const props = defineProps<{
 <template>
   <div
     class="flex items-center gap-4 w-full px-4 py-2.5 rounded-lg font-medium"
-    :class="[variant]"
+    :style="[variant]"
   >
     <i class="fi fi-rr-info flex"></i>
 

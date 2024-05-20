@@ -3,6 +3,7 @@ import { type Person } from "~~/models";
 
 definePageMeta({
   layout: "dashboard",
+  middleware: "logged-in",
 });
 
 const peopleStore = usePeopleStore();
@@ -14,7 +15,6 @@ const {
   errorRemovePeople,
   removingPeople,
 } = storeToRefs(peopleStore);
-const { roles } = storeToRefs(authStore);
 
 const showNewPersonModal = ref(false);
 const query = ref("");

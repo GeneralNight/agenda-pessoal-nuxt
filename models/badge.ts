@@ -1,5 +1,5 @@
 export enum BadgeVariant {
-  INFO = "bg-custom-blue text-white",
-  DANGER = "bg-[#e74c3c] text-white",
-  WARNING = "bg-[#FF9400] text-white",
+  INFO = "background-color:#424bd1; color:#fff",
+  DANGER = "background-color:#e74c3c; color:#fff",
+  WARNING = "background-color:#FF9400; color:#fff",
 }

@@ -8,7 +8,9 @@ const props = defineProps<{
 }>();
 
 const authStore = useAuthStore();
-const { logging, errorLogin, profile, savingProfile } = storeToRefs(authStore);
+const { logging, errorLogin, savingProfile } = storeToRefs(authStore);
+
+const profile = ref({ ...useProfile.profile() });
 
 const valid = ref(false);
 
@@ -28,7 +30,7 @@ const close = () => {
 };
 
 const validateLogin = async () => {
-  if (authStore.username !== info.value.username) {
+  if (profile.value?.username !== info.value.username) {
     errorLogin.value = true;
     return;
   }

@@ -1,28 +1,21 @@
 <script lang="ts" setup>
 definePageMeta({
   layout: "dashboard",
+  middleware: "logged-in",
 });
 
 const authStore = useAuthStore();
-const {
-  profile,
-  loadingProfile,
-  errorLoadProfile,
-  savingProfile,
-  errorSaveProfile,
-} = storeToRefs(authStore);
+const { loadingProfile, errorLoadProfile, savingProfile, errorSaveProfile } =
+  storeToRefs(authStore);
 
 const action = ref<"change-password" | "change-username" | undefined>();
+const profile = ref(useProfile.profile().value);
 
 const saveProfile = () => {
   if (profile?.value) {
     authStore.saveProfile(profile.value);
   }
 };
-
-onMounted(async () => {
-  await authStore.loadProfile();
-});
 </script>
 
 <template>
